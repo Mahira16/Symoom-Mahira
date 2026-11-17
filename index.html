@@ -311,6 +311,7 @@ button.ghost { font-family: var(--font-ui); font-weight: 500; font-size: .8rem; 
         <p class="host"><b>Zakir Hossain and Shamoly Hoque</b>invite you to attend the Wedding Reception (Walima) of their son</p>
         <h1 class="names"><span class="nm">Symoom Saad</span> <span class="amp">&amp;</span> <span class="nm">Mahira Moazzah</span></h1>
         <p class="parents">Daughter of Muzammel Hussain and Asma Jahan</p>
+        <p style="margin: 28px 0 0"><a class="cta" href="https://docs.google.com/forms/d/e/1FAIpQLSe4Pp-d9UQ-yW1OrU9PplEgd6TI7hOdWnrZ7ptNgJNCf65xCg/viewform" target="_blank" rel="noopener" style="margin-top: 0">Tap here to RSVP</a></p>
         <div class="hint" aria-hidden="true"><span class="label">Keep scrolling</span><svg width="24" height="24" viewBox="0 0 24 24"><path d="M5 9l7 7 7-7" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
       </div>
     </div>
@@ -358,61 +359,12 @@ button.ghost { font-family: var(--font-ui); font-weight: 500; font-size: .8rem; 
         <p class="label rv">Kindly reply</p>
         <h2 class="ask rv" style="--d:.08s">Will you join us?</h2>
         <p class="rsvpby rv" style="--d:.12s">RSVP by December 10<span id="count"></span></p>
-        <p class="phone rv" style="--d:.16s"><span>Questions? Call or text</span> <b id="phoneText">236-878-2248</b> <button type="button" class="ghost" id="copyPhone">Copy</button></p>
       </div>
-      <div class="paper form rv" id="replyCard" style="--d:.2s">
-        <section id="formView">
-          <p class="sub">One reply per person, so please list everyone in your party.</p>
-          <form id="rsvpForm" novalidate>
-            <div class="field">
-              <label class="flabel" for="name">Your full name</label>
-              <input type="text" id="name" autocomplete="name" maxlength="80">
-            </div>
-            <fieldset>
-              <legend>Will you attend?</legend>
-              <div class="choices">
-                <label class="choice"><input type="radio" name="attending" value="yes" id="att-yes"><span>Yes</span></label>
-                <label class="choice"><input type="radio" name="attending" value="no" id="att-no"><span>No</span></label>
-              </div>
-            </fieldset>
-            <div id="yesFields" hidden style="display: contents">
-              <div class="field">
-                <label class="flabel" for="party">Number attending <span class="fhint">(including you)</span></label>
-                <select id="party"></select>
-              </div>
-              <div class="field" id="namesField" hidden>
-                <label class="flabel" for="guestNames">Names of your guests <span class="fhint">(one per line)</span></label>
-                <textarea id="guestNames" maxlength="400"></textarea>
-              </div>
-            </div>
-            <p class="msg" id="formMsg" role="status" aria-live="polite"></p>
-            <button type="submit" class="btn" id="sendBtn">Send RSVP</button>
-            <p class="note">Questions? Call or text 236-878-2248.</p>
-          </form>
-        </section>
-
-        <section id="doneView" class="done" hidden>
-          <h2 class="ask" id="doneTitle">Thank you</h2>
-          <p id="doneText"></p>
-          <button type="button" class="ghost" id="editBtn">Send another reply</button>
-        </section>
-
-        <section id="smsView" hidden>
-          <h2 class="ask">We could not send it</h2>
-          <p class="sub">Your reply did not go through, most likely because of your connection. You can try again, or text it to <b>236-878-2248</b>.</p>
-          <p style="margin: 0 0 18px; text-align: center"><a class="cta" id="smsLink" href="#" style="margin-top: 0">Open text message</a></p>
-          <div class="field">
-            <label class="flabel" for="smsText">Your message</label>
-            <textarea id="smsText" class="sms" readonly></textarea>
-          </div>
-          <div class="row" style="margin-top: 14px">
-            <button type="button" class="btn" id="copySms">Copy message</button>
-            <button type="button" class="ghost" id="backBtn">Try again</button>
-          </div>
-          <p class="msg" id="smsMsg" role="status" aria-live="polite"></p>
-        </section>
+      <div class="paper center rv" style="--d:.2s">
+        <p style="margin: 0 0 22px">Tap the button to open our short RSVP form. It takes less than a minute.</p>
+        <a class="cta" id="rsvpBtn" href="https://docs.google.com/forms/d/e/1FAIpQLSe4Pp-d9UQ-yW1OrU9PplEgd6TI7hOdWnrZ7ptNgJNCf65xCg/viewform" target="_blank" rel="noopener" style="margin-top: 0; padding: 18px 34px; font-size: .95rem">Tap here to RSVP</a>
+        <p class="note" style="margin-top: 22px">Questions? Call or text 236-878-2248.</p>
       </div>
-
     </div>
   </section>
 
@@ -540,118 +492,6 @@ button.ghost { font-family: var(--font-ui); font-weight: 500; font-size: .8rem; 
     if (ev.key === "Enter" || ev.key === " ") { ev.preventDefault(); openEnvelope(); }
   });
 
-  /* RSVP goes into the couple's Google Form */
-  var FORM_URL = "https://docs.google.com/forms/d/e/1FAIpQLSe4Pp-d9UQ-yW1OrU9PplEgd6TI7hOdWnrZ7ptNgJNCf65xCg/formResponse";
-  var F = { name: "entry.294200708", attending: "entry.646858395", count: "entry.307895495", guests: "entry.381279849" };
-  var SMS_TO = "+12368782248";
-  var sending = false;
-  function copyText(text, area, msgEl, okText) {
-    function fallback() {
-      try {
-        if (area) { area.focus(); area.select(); }
-        msgEl.className = "msg";
-        msgEl.textContent = "Select the text and copy it.";
-      } catch (e) {}
-    }
-    try {
-      navigator.clipboard.writeText(text).then(function () {
-        msgEl.className = "msg"; msgEl.textContent = okText;
-      }, fallback);
-    } catch (e) { fallback(); }
-  }
-  (function () {
-    var s = $("party");
-    for (var i = 1; i <= 8; i++) {
-      var o = document.createElement("option");
-      o.value = String(i); o.textContent = i === 1 ? "1 person" : i + " people";
-      s.appendChild(o);
-    }
-  })();
-  function attendingValue() { return $("att-yes").checked ? "yes" : $("att-no").checked ? "no" : ""; }
-  function syncFields() {
-    var yes = attendingValue() === "yes";
-    $("yesFields").hidden = !yes;
-    $("yesFields").style.display = yes ? "contents" : "none";
-    $("namesField").hidden = !(yes && Number($("party").value) > 1);
-  }
-  $("att-yes").addEventListener("change", syncFields);
-  $("att-no").addEventListener("change", syncFields);
-  $("party").addEventListener("change", syncFields);
-  syncFields();
-
-  function show(view) {
-    $("formView").hidden = view !== "form";
-    $("doneView").hidden = view !== "done";
-    $("smsView").hidden = view !== "sms";
-    try { $("replyCard").scrollIntoView({ block: "start" }); } catch (e) {}
-  }
-  function readForm() {
-    var yes = attendingValue() === "yes";
-    return {
-      name: $("name").value.trim(),
-      attending: yes,
-      answered: attendingValue() !== "",
-      partySize: yes ? Number($("party").value) : 0,
-      guestNames: yes && Number($("party").value) > 1 ? $("guestNames").value.trim() : ""
-    };
-  }
-  function smsBody(r) {
-    var t = "RSVP for Symoom & Mahira's Walima, Dec 26. " + r.name + ": ";
-    t += r.attending ? "attending, " + r.partySize + (r.partySize === 1 ? " person" : " people") + "." : "unable to attend.";
-    if (r.guestNames) t += " Guests: " + r.guestNames.replace(/\s*\n\s*/g, ", ") + ".";
-    return t;
-  }
-  function showDone(r) {
-    $("doneTitle").textContent = r.attending ? "Thank you, " + r.name : "We will miss you, " + r.name;
-    $("doneText").textContent = r.attending
-      ? "We have you down for " + r.partySize + (r.partySize === 1 ? " guest" : " guests") + " on Saturday, December 26 at 6 PM. We look forward to celebrating with you."
-      : "Thank you for letting us know. Your doa means a lot to us.";
-    show("done");
-  }
-  function showFail(r) {
-    var body = smsBody(r);
-    $("smsText").value = body;
-    $("smsLink").href = "sms:" + SMS_TO + "?&body=" + encodeURIComponent(body);
-    $("smsMsg").textContent = "";
-    show("sms");
-  }
-  $("rsvpForm").addEventListener("submit", function (ev) {
-    ev.preventDefault();
-    if (sending) return;
-    var r = readForm();
-    var msg = $("formMsg");
-    var problem = !r.name ? "Please enter your name." : !r.answered ? "Please choose whether you will attend." : "";
-    if (problem) { msg.className = "msg err"; msg.textContent = problem; return; }
-    msg.textContent = "";
-    var data = new URLSearchParams();
-    data.append(F.name, r.name);
-    data.append(F.attending, r.attending ? "Yes" : "No");
-    data.append(F.count, String(r.partySize));
-    data.append(F.guests, r.guestNames || "-");
-    sending = true;
-    var btn = $("sendBtn");
-    btn.disabled = true; btn.textContent = "Sending...";
-    var ctl = typeof AbortController === "function" ? new AbortController() : null;
-    var timer = setTimeout(function () { if (ctl) ctl.abort(); }, 15000);
-    var done = function (ok) {
-      clearTimeout(timer);
-      sending = false; btn.disabled = false; btn.textContent = "Send RSVP";
-      if (ok) showDone(r); else showFail(r);
-    };
-    try {
-      fetch(FORM_URL, { method: "POST", mode: "no-cors", body: data, signal: ctl ? ctl.signal : undefined })
-        .then(function () { done(true); }, function () { done(false); });
-    } catch (e) { done(false); }
-  });
-  $("editBtn").addEventListener("click", function () { show("form"); });
-  $("backBtn").addEventListener("click", function () { show("form"); });
-  $("copySms").addEventListener("click", function () { copyText($("smsText").value, $("smsText"), $("smsMsg"), "Copied. Paste it into a text message to 236-878-2248."); });
-  $("copyPhone").addEventListener("click", function () {
-    var b = $("copyPhone");
-    try {
-      navigator.clipboard.writeText(PHONE).then(function () { b.textContent = "Copied"; }, function () { b.textContent = PHONE; });
-    } catch (e) { b.textContent = PHONE; }
-  });
 })();
 </script>
 </html>
